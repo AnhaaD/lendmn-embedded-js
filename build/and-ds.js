@@ -78,25 +78,21 @@ module.exports = __webpack_require__(1);
   const button = ({container = 'and-ds', invoiceNumber, qr_string, qr_link, amount, description})=> {
     __webpack_require__(2)
 
-    var element = document.getElementById(container);
-    var created = false;
-
-    if (element === null) {
-      element = document.createElement("div");
-      created = true;
-    }
-
+    var element = document.createElement("div");
     var text = document.createTextNode("Төлөх");
 
-    element.classList.add('button-and-dssss');
+    element.classList.add('button-and-ds');
     element.appendChild(text);
 
     element.addEventListener("click", function(){
       window.location = qr_link;
     });
 
-    if (created)
-      document.body.appendChild(element);
+    var parent = document.getElementById(container);
+    if (parent === null)
+      document.getElementById("body").appendChild(element);
+    else
+      parent.appendChild(element);
   }
   window.ANDDS = {
     button:button
@@ -159,7 +155,7 @@ if(false) {
 
 exports = module.exports = __webpack_require__(4)(false);
 // Module
-exports.push([module.i, ".button-and-ds {\n  background: rgb(245,124,0);\n  color: #fff;\n  width: 100%;\n  border: 0;\n  height: 48px;\n  font-weight: 400;\n  border-radius: 4pt;\n  font-size: 11pt;\n  line-height: 20pt;\n  justify-content: center;\n  align-items: center;\n  display: flex;\n}", ""]);
+exports.push([module.i, ".button-and-ds {\n  background: rgb(245,124,0);\n  color: #fff;\n  width: 100%;\n  border: 0;\n  height: 48px;\n  font-weight: 400;\n  border-radius: 4px;\n  font-size: 17px;\n  line-height: 20px;\n  justify-content: center;\n  align-items: center;\n  display: flex;\n  margin: 10px;\n}", ""]);
 
 
 
