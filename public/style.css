@@ -1,0 +1,14 @@
+.button-and-ds {
+  background: rgb(245,124,0);
+  color: #fff;
+  width: 100%;
+  border: 0;
+  height: 48px;
+  font-weight: 400;
+  border-radius: 4pt;
+  font-size: 11pt;
+  line-height: 20pt;
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
