@@ -278,7 +278,7 @@ if(false) {
 
 exports = module.exports = __webpack_require__(4)(false);
 // Module
-exports.push([module.i, ".button-and-ds {\n  background: rgb(245,124,0);\n  color: #fff;\n  width: 100%;\n  border: 0;\n  height: 48px;\n  font-weight: 400;\n  border-radius: 4px;\n  font-size: 17px;\n  line-height: 20px;\n  justify-content: center;\n  align-items: center;\n  display: flex;\n  margin: 10px;\n}", ""]);
+exports.push([module.i, ".button-and-ds {\n  background: rgb(245,124,0);\n  color: #fff;\n  border: 0;\n  height: 48px;\n  font-weight: 400;\n  border-radius: 4px;\n  font-size: 17px;\n  line-height: 20px;\n  justify-content: center;\n  align-items: center;\n  display: flex;\n}", ""]);
 
 
 
