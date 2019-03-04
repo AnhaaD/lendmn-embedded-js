@@ -98,31 +98,49 @@ module.exports = __webpack_require__(1);
     description,
     callback
   }) => {
-
     __webpack_require__(2);
-    console.log("lib", lib);
 
     var element = document.createElement("div");
     var text = document.createTextNode("Төлөх");
 
     element.classList.add("button-and-ds");
     element.appendChild(text);
-
-    element.addEventListener("click", function() {
-      if (lib.isEmbedded) {
-        lib.payInvoice({
-          invoiceNumber,
-          amount,
-          description
-        }, callback)
-      } else {
-        window.location = qr_link;
-      }
+    lib.appendPayInvoiceAction({
+      element,
+      invoiceNumber,
+      amount,
+      description,
+      callback
     });
 
     var parent = document.getElementById(container);
     if (parent === null) document.getElementById("body").appendChild(element);
     else parent.appendChild(element);
+  };
+
+  lib.appendPayInvoiceAction = ({
+    element,
+    invoiceNumber,
+    amount,
+    description,
+    callback
+  }) => {
+    let qr_link = `andpay://lend.mn/i/m/${invoiceNumber}`;
+
+    element.addEventListener("click", function() {
+      if (lib.isEmbedded) {
+        lib.payInvoice(
+          {
+            invoiceNumber,
+            amount,
+            description
+          },
+          callback
+        );
+      } else {
+        window.location = qr_link;
+      }
+    });
   };
 
   lib.setEmbedded = () => {
@@ -141,14 +159,14 @@ module.exports = __webpack_require__(1);
       eventListeners.hasOwnProperty(hook) &&
       Array.isArray(eventListeners[hook])
     ) {
-      for(let i = 0; i<eventListeners[hook].length; i++) {
+      for (let i = 0; i < eventListeners[hook].length; i++) {
         eventListeners[hook][i](data);
       }
     }
   };
 
   lib.addEventListener = (hook, callback) => {
-    if(!lib.isEmbedded) {
+    if (!lib.isEmbedded) {
       return false; //embedded үйлдэл байхгүй
     }
     let eventListener = null;
@@ -175,7 +193,7 @@ module.exports = __webpack_require__(1);
   };
 
   lib.removeEventListener = (hook, callback) => {
-    if(!lib.isEmbedded) {
+    if (!lib.isEmbedded) {
       return false; //embedded үйлдэл байхгүй
     }
     let index = 0;
@@ -191,31 +209,31 @@ module.exports = __webpack_require__(1);
   };
 
   lib.getUri = (dummy, callback) => {
-    if(!lib.isEmbedded) {
+    if (!lib.isEmbedded) {
       return false; //embedded үйлдэл байхгүй
     }
-    let actualCallback = (data) => {
-      lib.removeEventListener('ongeturi', actualCallback);
+    let actualCallback = data => {
+      lib.removeEventListener("ongeturi", actualCallback);
       callback(data);
-    }
-    let anchor = lib.addEventListener('ongeturi', actualCallback);
-    bridgeFunction('getUri', dummy);
+    };
+    let anchor = lib.addEventListener("ongeturi", actualCallback);
+    bridgeFunction("getUri", dummy);
     return true;
-  }
+  };
 
   lib.payInvoice = (params, callback) => {
-    if(!lib.isEmbedded) {
+    if (!lib.isEmbedded) {
       return false; //embedded үйлдэл байхгүй
     }
 
-    let actualCallback = (data) => {
-      lib.removeEventListener('payInvoiceComplete', actualCallback);
+    let actualCallback = data => {
+      lib.removeEventListener("payInvoiceComplete", actualCallback);
       callback(data);
-    }
-    lib.addEventListener('payInvoiceComplete', actualCallback);
-    bridgeFunction('payInvoice', params);
+    };
+    lib.addEventListener("payInvoiceComplete", actualCallback);
+    bridgeFunction("payInvoice", params);
     return true;
-  }
+  };
 
   window.ANDDS = lib;
   window.ANDembedded = lib;
