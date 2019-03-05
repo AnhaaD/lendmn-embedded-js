@@ -167,6 +167,7 @@ module.exports = __webpack_require__(1);
 
   lib.addEventListener = (hook, callback) => {
     if (!lib.isEmbedded) {
+      callback({error: 10, error_message: "Not embedded"});
       return false; //embedded үйлдэл байхгүй
     }
     let eventListener = null;
@@ -204,12 +205,26 @@ module.exports = __webpack_require__(1);
     ) {
       eventListeners[hook].splice(index, 1);
     }
-    console.log(eventListeners[hook]);
     return true;
+  };
+
+  lib.removeAllEventListeners = hook => {
+    if (!lib.isEmbedded) {
+      return false; //embedded үйлдэл байхгүй
+    }
+    if (
+      eventListeners.hasOwnProperty(hook) &&
+      Array.isArray(eventListeners[hook])
+    ) {
+      eventListeners[hook] = [];
+      return true;
+    }
+    return false;
   };
 
   lib.getUri = (dummy, callback) => {
     if (!lib.isEmbedded) {
+      callback({error: 10, error_message: "Not embedded"});
       return false; //embedded үйлдэл байхгүй
     }
     let actualCallback = data => {
@@ -223,6 +238,7 @@ module.exports = __webpack_require__(1);
 
   lib.payInvoice = (params, callback) => {
     if (!lib.isEmbedded) {
+      callback({error: 10, error_message: "Not embedded"});
       return false; //embedded үйлдэл байхгүй
     }
 
@@ -232,6 +248,30 @@ module.exports = __webpack_require__(1);
     };
     lib.addEventListener("payInvoiceComplete", actualCallback);
     bridgeFunction("payInvoice", params);
+    return true;
+  };
+
+  lib.readQr = callback => {
+    if (!lib.isEmbedded) {
+      callback({error: 10, error_message: "Not embedded"});
+      return false;
+    }
+
+    let actualCallback = data => {
+      lib.removeEventListener("onQrComplete", actualCallback);
+      callback(data);
+    };
+    lib.addEventListener("onQrComplete", actualCallback);
+    bridgeFunction("qr");
+    return true;
+  };
+
+  lib.closeQrReader = () => {
+    if (!lib.isEmbedded) {
+      return false;
+    }
+    bridgeFunction("closeQrReader");
+    lib.removeAllEventListeners('onQrComplete');
     return true;
   };
 
