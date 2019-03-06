@@ -145,6 +145,7 @@ module.exports = __webpack_require__(1);
 
   lib.setEmbedded = () => {
     lib.isEmbedded = true;
+    lib.dispatchEvent({hook: 'setEmbeddedFinished', data: null});
   };
 
   lib.unsetEmbedded = () => {

@@ -69,6 +69,7 @@
 
   lib.setEmbedded = () => {
     lib.isEmbedded = true;
+    lib.dispatchEvent({hook: 'setEmbeddedFinished', data: null});
   };
 
   lib.unsetEmbedded = () => {
