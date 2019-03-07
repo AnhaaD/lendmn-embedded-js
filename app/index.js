@@ -91,10 +91,6 @@
   };
 
   lib.addEventListener = (hook, callback) => {
-    if (!lib.isEmbedded) {
-      callback({error: 10, error_message: "Not embedded"});
-      return false; //embedded үйлдэл байхгүй
-    }
     let eventListener = null;
     if (
       eventListeners.hasOwnProperty(hook) &&
@@ -119,9 +115,6 @@
   };
 
   lib.removeEventListener = (hook, callback) => {
-    if (!lib.isEmbedded) {
-      return false; //embedded үйлдэл байхгүй
-    }
     let index = 0;
     if (
       eventListeners.hasOwnProperty(hook) &&
@@ -134,9 +127,6 @@
   };
 
   lib.removeAllEventListeners = hook => {
-    if (!lib.isEmbedded) {
-      return false; //embedded үйлдэл байхгүй
-    }
     if (
       eventListeners.hasOwnProperty(hook) &&
       Array.isArray(eventListeners[hook])
