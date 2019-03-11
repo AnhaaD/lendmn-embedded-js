@@ -227,8 +227,8 @@ module.exports = __webpack_require__(1);
     return true;
   };
 
-  lib.payInvoice = (params, callback) => {
-    if (!lib.isEmbedded) {
+  lib.payInvoice = (params, callback, force = false) => {
+    if (!lib.isEmbedded && !force) {
       callback({error: 10, error_message: "Not embedded"});
       return false; //embedded үйлдэл байхгүй
     }
