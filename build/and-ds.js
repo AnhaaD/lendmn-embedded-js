@@ -266,6 +266,21 @@ module.exports = __webpack_require__(1);
     return true;
   };
 
+  lib.openUri = (uri, callback) => {
+    if (!lib.isEmbedded) {
+      callback({error: 10, error_message: "Not embedded"});
+      return false;
+    }
+
+    let actualCallback = data => {
+      lib.removeEventListener("openUriComplete", actualCallback);
+      callback(data);
+    };
+    lib.addEventListener("openUriComplete", actualCallback);
+    bridgeFunction("openUri", uri);
+    return true;
+  };
+
   window.ANDDS = lib;
   window.ANDembedded = lib;
 })(window);
