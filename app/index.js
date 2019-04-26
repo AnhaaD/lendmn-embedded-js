@@ -69,6 +69,7 @@
 
   lib.setEmbedded = () => {
     lib.isEmbedded = true;
+    lib.dispatchEvent({hook: 'setEmbeddedFinished', data: null});
   };
 
   lib.unsetEmbedded = () => {
@@ -90,9 +91,6 @@
   };
 
   lib.addEventListener = (hook, callback) => {
-    if (!lib.isEmbedded) {
-      return false; //embedded үйлдэл байхгүй
-    }
     let eventListener = null;
     if (
       eventListeners.hasOwnProperty(hook) &&
@@ -117,9 +115,6 @@
   };
 
   lib.removeEventListener = (hook, callback) => {
-    if (!lib.isEmbedded) {
-      return false; //embedded үйлдэл байхгүй
-    }
     let index = 0;
     if (
       eventListeners.hasOwnProperty(hook) &&
@@ -128,12 +123,23 @@
     ) {
       eventListeners[hook].splice(index, 1);
     }
-    console.log(eventListeners[hook]);
     return true;
+  };
+
+  lib.removeAllEventListeners = hook => {
+    if (
+      eventListeners.hasOwnProperty(hook) &&
+      Array.isArray(eventListeners[hook])
+    ) {
+      eventListeners[hook] = [];
+      return true;
+    }
+    return false;
   };
 
   lib.getUri = (dummy, callback) => {
     if (!lib.isEmbedded) {
+      callback({error: 10, error_message: "Not embedded"});
       return false; //embedded үйлдэл байхгүй
     }
     let actualCallback = data => {
@@ -145,8 +151,9 @@
     return true;
   };
 
-  lib.payInvoice = (params, callback) => {
-    if (!lib.isEmbedded) {
+  lib.payInvoice = (params, callback, force = false) => {
+    if (!lib.isEmbedded && !force) {
+      callback({error: 10, error_message: "Not embedded"});
       return false; //embedded үйлдэл байхгүй
     }
 
@@ -156,6 +163,45 @@
     };
     lib.addEventListener("payInvoiceComplete", actualCallback);
     bridgeFunction("payInvoice", params);
+    return true;
+  };
+
+  lib.readQr = callback => {
+    if (!lib.isEmbedded) {
+      callback({error: 10, error_message: "Not embedded"});
+      return false;
+    }
+
+    let actualCallback = data => {
+      lib.removeEventListener("onQrComplete", actualCallback);
+      callback(data);
+    };
+    lib.addEventListener("onQrComplete", actualCallback);
+    bridgeFunction("qr");
+    return true;
+  };
+
+  lib.closeQrReader = () => {
+    if (!lib.isEmbedded) {
+      return false;
+    }
+    bridgeFunction("closeQrReader");
+    lib.removeAllEventListeners('onQrComplete');
+    return true;
+  };
+
+  lib.openUri = (uri, callback) => {
+    if (!lib.isEmbedded) {
+      callback({error: 10, error_message: "Not embedded"});
+      return false;
+    }
+
+    let actualCallback = data => {
+      lib.removeEventListener("openUriComplete", actualCallback);
+      callback(data);
+    };
+    lib.addEventListener("openUriComplete", actualCallback);
+    bridgeFunction("openUri", uri);
     return true;
   };
 
