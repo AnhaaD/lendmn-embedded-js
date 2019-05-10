@@ -205,6 +205,21 @@
     return true;
   };
 
+  lib.share = (params, callback) => {
+    if (!lib.isEmbedded) {
+      callback({error: 10, error_message: "Not embedded"});
+      return false;
+    }
+
+    let actualCallback = data => {
+      lib.removeEventListener("shareComplete", actualCallback);
+      callback(data);
+    };
+    lib.addEventListener("shareComplete", actualCallback);
+    bridgeFunction("share", params);
+    return true;
+  };
+
   window.ANDDS = lib;
   window.ANDembedded = lib;
 })(window);
